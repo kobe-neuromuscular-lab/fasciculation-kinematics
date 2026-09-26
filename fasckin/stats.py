@@ -17,7 +17,7 @@ FEATURES = ["total_ms", "contraction_ms", "relaxation_ms", "directional_anisotro
             "active_area_fraction"]
 # total = contraction + relaxation exactly, so one of the three durations must be
 # left out of the MANOVA; with all three the error matrix is singular and Pillai's
-# trace becomes numerically unstable (see docs/paper_vs_code.md).
+# trace becomes numerically unstable.
 MANOVA_FEATURES = [f for f in FEATURES if f != "relaxation_ms"]
 
 
@@ -46,8 +46,7 @@ def standardized_difference(a, b):
 def univariate(cases, controls, features=FEATURES):
     """Mean +/- SD per group, t-test p value and Cohen's d for each feature.
 
-    The paper's p values were computed with Welch's t-test (unequal variances);
-    see docs/paper_vs_code.md.
+    p values are given for both Welch's (unequal variances) and Student's t-test.
     """
     out = []
     for f in features:

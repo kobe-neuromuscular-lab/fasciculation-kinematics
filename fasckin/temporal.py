@@ -12,7 +12,7 @@
 
 Note: the curve shown to the observer (and on which landmarks were read) is
 the raw 5-point mean interpolated with a cubic spline (x5) and a Gaussian
-filter (sigma = 2 samples); see ``smooth_curve`` and docs/paper_vs_code.md.
+filter (sigma = 2 samples); see ``smooth_curve``.
 """
 
 import numpy as np

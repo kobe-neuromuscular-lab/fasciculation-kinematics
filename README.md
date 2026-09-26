@@ -116,11 +116,6 @@ repository combines them into one package.
   digits. The velocity waveforms matched within 0.003 px/frame. Run on the
   saved features, propensity matching selected exactly the same 62 pairs, and
   the univariate results equal the published values.
-* **The published Methods text differs from the code in several places. The
-  most important is that the reported directional anisotropy used a 5 %
-  displacement cutoff, not the 15 % stated.** All differences are listed in
-  [`docs/paper_vs_code.md`](docs/paper_vs_code.md). Please read it before
-  comparing numbers with the paper.
 * [`docs/original_scripts.md`](docs/original_scripts.md) maps the original
   scripts to the modules in this package.
 

@@ -38,5 +38,6 @@ We used stored recordings and the saved intermediate files (not distributed).
   differed by at most 0.003 px/frame. The original re-tracking started from
   coordinates rounded to 6 digits, which explains the small difference.
 * **Statistics.** Run on the saved features, propensity matching selected the
-  identical 62 pairs. Means, SDs and p values equal the published values. For
-  the MANOVA, see `paper_vs_code.md` §5.
+  identical 62 pairs. Means, SDs and p values equal the published values. The
+  MANOVA uses seven variables because total duration equals contraction plus
+  relaxation exactly (see `fasckin/stats.py`).
