@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the article below."
+title: "fasciculation-kinematics"
+authors:
+  - family-names: Sugisawa
+    given-names: Ryosuke
+  - family-names: Sekiguchi
+    given-names: Kenji
+license: MIT
+preferred-citation:
+  type: article
+  title: "Quantitative Spatiotemporal Analysis of Ultrasound Images of Fasciculations in ALS"
+  authors:
+    - family-names: Sugisawa
+      given-names: Ryosuke
+    - family-names: Sekiguchi
+      given-names: Kenji
+    - family-names: Noda
+      given-names: Yoshikatsu
+    - family-names: Matoba
+      given-names: Shun
+    - family-names: Suehiro
+      given-names: Hirotomo
+    - family-names: Kozuki
+      given-names: Jun
+    - family-names: Tanaka
+      given-names: Tomoko
+    - family-names: Chihara
+      given-names: Norio
+  journal: "Muscle & Nerve"
+  year: 2026
+  doi: "10.1002/mus.70338"

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+work/
+examples/data/
+*.avi
+*.mp4
+*.csv.gz
+.DS_Store
