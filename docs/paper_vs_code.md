@@ -17,11 +17,16 @@ It was not reported.
 
 | Cutoff | ALS | non-ALS | Welch p |
 |---|---|---|---|
+| none (all 57,600 points) | 0.497 ± 0.243 | 0.596 ± 0.217 | 0.018 |
+| ≥ 1 % | 0.501 ± 0.244 | 0.598 ± 0.217 | 0.021 |
 | ≥ 5 % (reported) | 0.534 ± 0.245 | 0.627 ± 0.215 | 0.028 |
-| ≥ 15 % | 0.658 ± 0.244 | 0.734 ± 0.203 | 0.062 |
+| ≥ 10 % | 0.588 ± 0.246 | 0.679 ± 0.214 | 0.030 |
+| ≥ 15 % (stated in Methods) | 0.658 ± 0.244 | 0.734 ± 0.203 | 0.062 |
 
-This package outputs both values, as `directional_anisotropy_05` and
-`directional_anisotropy_15`. The active area fraction uses 15 %, as described.
+The ALS group has the lower DA at every cutoff. The difference becomes
+smaller as the cutoff rises. This package outputs the values without a
+cutoff, at 5 % and at 15 %, as `directional_anisotropy_00`,
+`directional_anisotropy_05` and `directional_anisotropy_15`. The active area fraction uses 15 %, as described.
 
 ## 2. The landmarks were read on a smoothed curve
 

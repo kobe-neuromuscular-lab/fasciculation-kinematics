@@ -42,13 +42,14 @@ def echogenicity(frame_gray, x, y, half=20, bg_box=(90, 20, 600, 420)):
     return echo, echo / mean_bg if mean_bg else np.nan
 
 
-def spatial_metrics(df, segment_path=None, cutoffs=(0.05, 0.15)):
+def spatial_metrics(df, segment_path=None, cutoffs=(0.0, 0.05, 0.15)):
     """Compute the per-segment spatial features.
 
     Returned keys (pixel / frame units; convert with ``units``):
       max_frame                  peak frame (Frame 5-9, largest summed displacement)
       peak_displacement_px       largest per-frame displacement at the peak frame
       active_area_fraction       share of points moving >= 15 % of the peak displacement
+      directional_anisotropy_00  DA over all points (no cutoff)
       directional_anisotropy_05  DA over points moving >= 5 % of the peak displacement
       directional_anisotropy_15  DA over points moving >= 15 % of the peak displacement
       epicenter_x, epicenter_y   position (Frame 1) of the point with the peak displacement
