@@ -1,5 +1,7 @@
 # fasciculation-kinematics
 
+[![DOI](https://zenodo.org/badge/1389337653.svg)](https://doi.org/10.5281/zenodo.22979882)
+
 Code for **R. Sugisawa, K. Sekiguchi, et al. "Quantitative Spatiotemporal Analysis of
 Ultrasound Images of Fasciculations in ALS." *Muscle & Nerve* 2026.
 https://doi.org/10.1002/mus.70338**
@@ -121,7 +123,15 @@ repository combines them into one package.
 
 ## Citation
 
-If you use this code, please cite the paper (see `CITATION.cff`).
+If you use this code, please cite the paper:
+
+> Sugisawa R, Sekiguchi K, Noda Y, et al. Quantitative Spatiotemporal Analysis of
+> Ultrasound Images of Fasciculations in ALS. *Muscle & Nerve* 2026.
+> https://doi.org/10.1002/mus.70338
+
+To cite the code itself, use the Zenodo archive:
+https://doi.org/10.5281/zenodo.22979882. This DOI always resolves to the
+latest version. The DOI for v1.0.0 alone is 10.5281/zenodo.22979883.
 
 ## License
 
