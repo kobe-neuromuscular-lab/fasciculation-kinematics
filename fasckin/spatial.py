@@ -55,7 +55,7 @@ def spatial_metrics(df, segment_path=None, cutoffs=(0.0, 0.05, 0.15)):
       epicenter_x, epicenter_y   position (Frame 1) of the point with the peak displacement
       echogenicity, relative_echogenicity  (only if ``segment_path`` is given)
 
-    The DA values reported in the paper's Results/Table 2 are
+    The DA values reported in the paper's Abstract and Results are
     ``directional_anisotropy_05`` (see docs/paper_vs_code.md).
     """
     mf = peak_frame(df)
