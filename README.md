@@ -27,7 +27,7 @@ pipeline can be run.
 ## Install
 
 ```bash
-git clone https://github.com/<owner>/fasciculation-kinematics
+git clone https://github.com/kobe-neuromuscular-lab/fasciculation-kinematics
 cd fasciculation-kinematics
 pip install -r requirements.txt
 ```
