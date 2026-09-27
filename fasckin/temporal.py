@@ -57,6 +57,12 @@ def velocity_waveform(df_track, frames=SELECT_FRAMES, n_top=5):
     return df_track[df_track["Point ID"].isin(top)].groupby("Frame")["Length"].mean()
 
 
+def frame_top_average(df_track, n_top=5):
+    """Per frame, the mean of the ``n_top`` largest displacements among all points
+    (the thin blue reference curve of the original landmark tool)."""
+    return df_track.groupby("Frame")["Length"].apply(lambda s: s.nlargest(n_top).mean())
+
+
 def smooth_curve(frames, values, upsample=5, sigma=2.0):
     """Cubic-spline interpolation (x ``upsample``) followed by a Gaussian filter,
     as displayed in the landmark tool."""

@@ -30,10 +30,11 @@ def field_bounds(cx, cy, width, height, half=HALF_SIZE,
 def track_dense(segment_path, cx, cy, n_steps=N_STEPS, lk_params=DENSE_LK_PARAMS, **bounds_kw):
     """Track every pixel of the field centred on the epicentre (cx, cy), full-frame pixels.
 
+    n_steps: frame steps to track; None tracks the whole segment.
     Returns (df, fps, bounds). ``df`` has columns Frame, Point ID, X, Y, Length, angle
     with full-frame coordinates.
     """
-    frames, fps = read_gray_frames(segment_path, max_frames=n_steps + 1)
+    frames, fps = read_gray_frames(segment_path, max_frames=None if n_steps is None else n_steps + 1)
     h, w = frames[0].shape
     x0, y0, x1, y1 = field_bounds(cx, cy, w, h, **bounds_kw)
     pts = [(x, y) for y in range(y0, y1) for x in range(x0, x1)]

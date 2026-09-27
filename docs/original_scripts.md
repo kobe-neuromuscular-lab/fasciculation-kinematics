@@ -10,12 +10,12 @@ output.
 |---|---|---|---|
 | 1 | `split_2s_by0.5s.py` | 2-s windows every 0.5 s | `sparse.split_windows` |
 | 2 | `grid_class tracking -v4 (fas).py` | sparse 4-px grid tracking of each window | `sparse.track_sparse` (rebuilt from the saved output; the script file itself was later overwritten; see below) |
-| 3 | `master_analysis(fas) v2.py` | click epicentre, view curves, type peak frame → `fas_wave_timing.csv` | `scripts/locate.py --review`, `sparse.find_peak` |
+| 3 | `master_analysis(fas) v2.py` | click centre on the looping video (122-px and 240-px boxes shown), view the per-point curves inside the box, enter the peak frame → `fas_wave_timing.csv` | `scripts/locate.py --review` (same two steps; the peak frame is clicked instead of typed). `sparse.find_peak` is an automatic alternative |
 | 4 | `split_1s_by twitch timing.py` | 1-s segment, peak − 7 … + 53 frames | `segment.extract_segment` |
 | 5 | `grid_class tracking -v8.2 (fas) - calc1.5.py` | dense 240 × 240 tracking, Frame 0–12, angle | `dense.track_dense` |
 | 6 | `check_area twist degree(finalize1+2+3) -v2.py` | peak frame, DA, active area, echogenicity, clinical merge | `spatial.spatial_metrics` (Moran's I, computed but not reported, is omitted) |
 | 7 | `check_area twist degree(finalize for simp.py` | re-track points ≥ 30 % over the whole segment | `temporal.select_moving_points`, `temporal.retrack` |
-| 8 | `length vs frame.py` | interactive five-landmark marking → `twitch_param.csv` | `temporal.velocity_waveform`, `temporal.smooth_curve`, `scripts/mark_landmarks.py` |
+| 8 | `length vs frame.py` | interactive five-landmark marking on the red (5 fastest points) and blue (5 largest per frame) curves → `twitch_param.csv` | `temporal.velocity_waveform`, `temporal.frame_top_average`, `temporal.smooth_curve`, `scripts/mark_landmarks.py` |
 | 9 | `check_allcsv -wave analysis simpson area - integrate fasresult.py`, `pdv frame to milisecond.py` | merge and convert to µm, ms, µm/ms | `scripts/combine.py`, `units` |
 | 10 | `make propensity.py` | PSM (Hungarian), balance | `stats.propensity_match` |
 | 11 | `check_allcsv box -for matched data.py` | Welch t-tests, Cohen's d, box plots | `stats.univariate` |

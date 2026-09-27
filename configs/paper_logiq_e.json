@@ -1,0 +1,84 @@
+{
+  "_comment": "Settings used in the paper (GE LOGIQ e, 686 x 528 px export, 39-50 fps). Copy this file, edit, and pass it with --config. See README, Using the code on your own videos.",
+  "lk": {
+    "win_size": 50,
+    "max_level": 30,
+    "max_iter": 30,
+    "eps": 0.01
+  },
+  "sparse": {
+    "window_s": 2.0,
+    "hop_s": 0.5,
+    "grid_step": 4,
+    "x_range": [
+      110,
+      580
+    ],
+    "y_range": [
+      40,
+      400
+    ]
+  },
+  "review": {
+    "click_x_range": [
+      130,
+      557
+    ],
+    "click_y_range": [
+      65,
+      371
+    ],
+    "roi_half": 61,
+    "color_x_range": [
+      70,
+      620
+    ],
+    "color_y_range": [
+      0,
+      400
+    ]
+  },
+  "segment": {
+    "pre_frames": 7,
+    "post_frames": 53
+  },
+  "dense": {
+    "half_size": 120,
+    "center_x_range": [
+      235,
+      452
+    ],
+    "center_y_range": [
+      170,
+      266
+    ],
+    "n_steps": 13
+  },
+  "spatial": {
+    "peak_search_frames": [
+      5,
+      9
+    ],
+    "da_cutoffs": [
+      0.0,
+      0.05,
+      0.15
+    ],
+    "active_cutoff": 0.15,
+    "echo_half": 20,
+    "echo_bg_box": [
+      90,
+      20,
+      600,
+      420
+    ]
+  },
+  "temporal": {
+    "select_frames": [
+      4,
+      10
+    ],
+    "select_fraction": 0.3,
+    "n_top": 5
+  }
+}

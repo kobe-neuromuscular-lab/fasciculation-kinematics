@@ -4,7 +4,10 @@ grade, univariate tests, and repeated-split MANOVA / Mahalanobis distance.
     python scripts/compare_groups.py work/features.csv --out work/stats/
 
 features.csv needs: patient_id, group (1 = cases, 0 = comparison), Age, MRC and
-the feature columns listed in fasckin.stats.FEATURES.
+the feature columns (default: fasckin.stats.FEATURES, the paper's eight).
+--features chooses other columns; do not include columns that are exact sums of
+others in the MANOVA (the paper's total = contraction + relaxation, so the
+default MANOVA leaves relaxation out).
 """
 
 import argparse
@@ -22,6 +25,7 @@ def main():
     ap.add_argument("features_csv")
     ap.add_argument("--out", required=True)
     ap.add_argument("--no-matching", action="store_true")
+    ap.add_argument("--features", nargs="+", help="feature columns (default: the paper's)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -34,11 +38,12 @@ def main():
               f"{stats.standardized_difference(cases['Age'], controls['Age']):.3f}")
         pd.concat([cases, controls]).to_csv(os.path.join(a.out, "matched.csv"), index=False)
 
-    uni = stats.univariate(cases, controls)
+    uni = stats.univariate(cases, controls, features=a.features or stats.FEATURES)
     uni.to_csv(os.path.join(a.out, "univariate.csv"), index=False)
     print(uni.round(4).to_string(index=False))
 
-    mv = stats.manova_repeated(pd.concat([cases, controls], ignore_index=True))
+    mv = stats.manova_repeated(pd.concat([cases, controls], ignore_index=True),
+                               features=a.features or stats.MANOVA_FEATURES)
     mv.to_csv(os.path.join(a.out, "manova_iterations.csv"), index=False)
     print(f"Pillai's trace {mv['pillai'].mean():.3f} +/- {mv['pillai'].std(ddof=0):.3f} "
           f"(max p {mv['p'].max():.2g}); Mahalanobis distance "

@@ -64,7 +64,8 @@ python scripts/compare_groups.py work/sim.csv --out work/stats
 ```
 recording.avi
   │ 1  scripts/locate.py         split into 2-s windows (0.5-s hop) → sparse 4-px grid tracking
-  │                              → peak frame + epicentre (automatic; --review to check by clicking)
+  │                              → centre + peak frame (--review: chosen on screen, as in the paper;
+  │                                without it: automatic)
   ▼ peaks.csv
   │ 2  scripts/track.py          1-s segment (peak − 7 … peak + 53 frames)
   │                              → ultra-dense tracking of the 240 × 240 px field (57,600 points, Frame 0–12)
@@ -92,20 +93,64 @@ section it implements. The tracking parameters are those in the paper:
 * `angle` is `atan2(dy, dx)` in image coordinates (y points down).
 * Coordinates are full-frame pixels.
 
-### Adapting to other data
+## Using the code on your own videos
 
-These values are tied to the scanner and export used in the paper (GE LOGIQ e,
-686 × 528 px export, 39–50 fps). Check them before using other data:
+All settings live in one JSON file. The defaults, stored in
+[`configs/paper_logiq_e.json`](configs/paper_logiq_e.json), are the settings
+used in the paper: a GE LOGIQ e export of 686 × 528 px, 39–50 fps, and events
+shorter than 1 s. For other data, copy that file, edit it, and pass
+`--config my_settings.json` to `locate.py` and `track.py`. Keys you leave out
+keep their default. `track.py` writes the settings it used to
+`config_used.json`.
 
-* `fasckin/sparse.py` `SPARSE_GRID`: the imaging area covered by the sparse grid.
-* `fasckin/dense.py` `CENTER_X_RANGE`, `CENTER_Y_RANGE`: keep the 240 × 240
-  field inside the image.
-* `fasckin/spatial.py` `echogenicity(bg_box=...)`: the reference area for
-  relative echogenicity.
-* `--um-per-px`: pixel size. Read it from the on-screen scale bar. It changes
-  with depth and field of view.
-* Search windows (`PEAK_SEARCH_FRAMES = (5, 9)`, `SELECT_FRAMES = (4, 10)`):
-  these assume the segment starts 7 frames before the peak.
+A typical run on a new recording `clip.mp4` (any format OpenCV can read):
+
+1. **Measure the pixel size.** Count how many pixels the on-screen 1-cm scale
+   spans: µm/px = 10000 / pixels. It changes with depth and field of view.
+2. **Set the image geometry** in your config. Open one frame in any image
+   viewer and read off the pixel coordinates:
+   * `sparse.x_range`, `sparse.y_range`: the area with ultrasound image
+     (exclude black margins and on-screen text);
+   * `review.click_x_range`, `review.click_y_range`: where a centre may be
+     clicked;
+   * `dense.center_x_range`, `dense.center_y_range`: the range of centres
+     for which the 2 × `dense.half_size` field still fits inside the image;
+   * `spatial.echo_bg_box`: the reference area for relative echogenicity.
+3. **Set the timing to your motion.** The defaults assume a short event:
+   * `segment.pre_frames`, `segment.post_frames`: the segment runs from
+     7 frames before the peak to 53 after;
+   * `spatial.peak_search_frames`: the peak is searched in Frames 5–9;
+   * `temporal.select_frames`: the fastest points are chosen in Frames 4–10;
+   * `dense.n_steps`: 13 steps are tracked for the spatial metrics
+     (`null` = the whole segment).
+
+   For a slower or longer motion, lengthen the segment and move these windows
+   so they cover the peak of your motion. For a larger moving region,
+   increase `dense.half_size`.
+4. **Find the events.** Watch the video, note the time of each event, and pick
+   the 2-s windows that contain it. Window *n* starts at (*n* − 1) × 0.5 s.
+   Then run
+   `python scripts/locate.py clip.mp4 --out work --windows 6 --review --config my_settings.json`.
+   Click the centre of the moving region on the looping video. The green box
+   marks the points plotted next, and the red box marks the field that will be
+   tracked. Press Enter. Then click the peak frame on the per-point
+   displacement curves and press Enter.
+5. **Track.** Run `python scripts/track.py work/peaks.csv --out work --config my_settings.json`.
+   This gives the spatial metrics (`spatial.csv`) and the velocity waveform
+   of each event (`waveforms/`).
+6. **Timing landmarks (optional).** `mark_landmarks.py` assumes a biphasic
+   out-and-back motion such as a twitch. For other motion patterns, use the
+   waveforms directly.
+7. **Convert units.** Run `python scripts/combine.py work --um-per-px <value>`.
+
+The package can also be used from Python:
+
+```python
+from fasckin import dense, spatial
+df, fps, field = dense.track_dense("segment.avi", cx=320, cy=240, n_steps=None)
+# df: one row per point and frame - Frame, Point ID, X, Y, Length (px/frame), angle (rad)
+metrics = spatial.spatial_metrics(df, search=(5, 9))
+```
 
 ## How this code relates to the paper
 

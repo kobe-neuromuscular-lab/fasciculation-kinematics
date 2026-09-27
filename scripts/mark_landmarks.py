@@ -4,10 +4,13 @@ Video S4).
     python scripts/mark_landmarks.py work/            # interactive, all unmarked segments
     python scripts/mark_landmarks.py work/ --set coherent_01197 3 7 12.5 21 33
 
-Interactive: moving the cursor over the curve shows the matching ultrasound
-frame. Click five times in order - Start, Peak contraction, Reversal, Peak
-relaxation, End - drag a line to adjust it, then close the window to save.
-Landmark positions are fractional frames on the smoothed curve.
+Interactive (the tool used for the paper): the red curve is the mean
+displacement of the 5 fastest points, the thin blue curve the mean of the 5
+largest displacements in each frame (both smoothed as in the original). Moving
+the cursor over the plot shows that video frame. Click five times in order -
+Start, Peak contraction, Reversal, Peak relaxation, End - drag a line to adjust
+it, then close the window to save. Landmarks are read on the red curve and
+stored as fractional frames.
 
 Results go to <work>/landmarks.csv (one row per segment, re-marking overwrites).
 """
@@ -28,9 +31,10 @@ COLORS = ["green", "orange", "purple", "brown", "black"]
 
 
 def mark(wave, video_path, title):
+    """wave: DataFrame indexed by Frame with column Length (and optionally Length_frame_top5)."""
     import matplotlib.pyplot as plt
 
-    xs, ys = temporal.smooth_curve(wave.index.values, wave.values)
+    xs, ys = temporal.smooth_curve(wave.index.values, wave["Length"].values)
     cap = cv2.VideoCapture(video_path)
     frames = []
     while True:
@@ -41,11 +45,16 @@ def mark(wave, video_path, title):
     cap.release()
 
     fig, (ax, ax_v) = plt.subplots(1, 2, figsize=(15, 6), gridspec_kw=dict(width_ratios=[1.2, 1]))
-    ax.plot(xs, ys, color="red", lw=2)
+    ax.plot(xs, ys, color="red", lw=2, label="Top5 Point IDs Average")
+    if "Length_frame_top5" in wave:
+        xb, yb = temporal.smooth_curve(wave.index.values, wave["Length_frame_top5"].values)
+        ax.plot(xb, yb, color="blue", lw=1, label="Each Frame Top5 Average")
+    ax.legend(loc="upper right")
+    ax.grid(True, alpha=0.3)
     ax.set_xlabel("Frame")
-    ax.set_ylabel("Displacement per frame (px), mean of 5 points")
+    ax.set_ylabel("Displacement per frame (px)")
     cursor = ax.axvline(0, color="k", ls="--", alpha=0.6)
-    img = ax_v.imshow(frames[1])
+    img = ax_v.imshow(frames[0])
     ax_v.set_axis_off()
     pos, lines, drag = {}, {}, {"name": None}
     names = temporal.LANDMARKS
@@ -55,8 +64,8 @@ def mark(wave, video_path, title):
         ax.set_title(f"{title} - click: {nxt}" if nxt else f"{title} - drag to adjust, close to save")
 
     def show(x):
-        # Row Frame = k is video frame k + 1 (see fasckin/tracking.py).
-        img.set_data(frames[max(0, min(int(round(x)) + 1, len(frames) - 1))])
+        # As in the original tool, the video frame shown is int(x).
+        img.set_data(frames[max(0, min(int(x), len(frames) - 1))])
 
     def on_press(ev):
         if ev.inaxes is not ax or ev.xdata is None:
@@ -125,7 +134,7 @@ def main():
         name = os.path.splitext(os.path.basename(wf))[0]
         if name in done:
             continue
-        wave = pd.read_csv(wf, index_col="Frame")["Length"]
+        wave = pd.read_csv(wf, index_col="Frame")
         pos = mark(wave, os.path.join(a.work, "segments", name + ".avi"), name)
         if pos is None:
             print(f"{name}: not all five landmarks marked - skipped")
